@@ -7,16 +7,18 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { data } = await axios.get(`https://www.instagram.com/${username}/`, {
+    // Fetch Instagram page data
+    const { data } = await axios.get(`https://www.instagram.com/${username}/?__a=1`, {
       headers: {
         'User-Agent': 'Mozilla/5.0'
       }
     });
 
-    const match = data.match(/"profile_pic_url_hd":"([^"]+)"/);
-    if (match && match[1]) {
-      const picUrl = match[1].replace(/\\u0026/g, '&');
-      return res.status(200).json({ success: true, url: picUrl });
+    // Extract the profile picture URL from the returned data
+    const profilePicUrl = data.graphql.user.profile_pic_url_hd;
+
+    if (profilePicUrl) {
+      return res.status(200).json({ success: true, url: profilePicUrl });
     } else {
       return res.status(404).json({ success: false, message: 'Profile picture not found' });
     }
