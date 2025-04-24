@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Instagram PFP Extractor</title>
+</head>
+<body>
+  <h2>Instagram Profile Picture Viewer</h2>
+  <input id="username" placeholder="Enter username" />
+  <button onclick="getPic()">Get Picture</button>
+  <br><br>
+  <img id="pfp" style="max-width: 300px;" />
+  <script>
+    async function getPic() {
+      const username = document.getElementById('username').value;
+      const res = await fetch(`/api/pfp?username=${username}`);
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('pfp').src = data.url;
+      } else {
+        alert('Profile picture not found.');
+      }
+    }
+  </script>
+</body>
+</html>
